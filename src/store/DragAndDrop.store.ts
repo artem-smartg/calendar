@@ -50,15 +50,16 @@ class DragAndDropStore {
             (task) => task.id === this.currentTask!.id
         );
 
-        if (currentIndex > -1) {
-            this.currentDay.tasks!.splice(currentIndex, 1);
-        }
+        if (currentIndex > -1) this.currentDay.tasks!.splice(currentIndex, 1);
 
         // Если перетаскивание внутри одного дня
         if (this.currentDay === targetDay) {
             // Вставляем задачу на позицию перед задачей, над которой её отпустили
-            const adjustedIndex =
-                this.targetTaskIndex > currentIndex ? this.targetTaskIndex - 1 : this.targetTaskIndex;
+            const adjustedIndex = this.targetTaskIndex > currentIndex
+                ?
+                this.targetTaskIndex - 1
+                :
+                this.targetTaskIndex;
 
             targetDay.tasks!.splice(adjustedIndex, 0, this.currentTask);
         } else {
@@ -67,7 +68,6 @@ class DragAndDropStore {
             targetDay.tasks.splice(this.targetTaskIndex, 0, this.currentTask);
         }
 
-        // Сброс состояния
         this.setCurrentDay(null);
         this.setCurrentTask(null);
         this.setTargetTaskIndex(null);

@@ -26,6 +26,7 @@ export const styles = {
         padding: "4px",
         borderRadius: "3px",
         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
+        cursor:'pointer',
     } as SxProps<Theme>,
     labelBox: {
         width: "40px",

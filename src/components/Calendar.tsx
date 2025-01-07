@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { Grid, Typography, Box, Button } from "@mui/material";
+import { Grid, Typography, Box, Button, TextField } from "@mui/material";
 import { Context } from "../context/ContextProvider";
 import { ContextType } from "../type/context.type";
 import { observer } from 'mobx-react-lite';
@@ -19,6 +19,14 @@ const Calendar: React.FC = observer(() => {
             <Button sx={{ m: 1 }} variant="contained" color="primary" onClick={() => taskModal.toggleModal()}>
                 Добавить задачу
             </Button>
+
+            <TextField
+                sx={{ m: 1 }}
+                variant="outlined"
+                placeholder="Поиск задач"
+                value={calendar.searchText} 
+                onChange={(e)=> calendar.setSearchText(e.target.value)}
+            />
 
             <Typography variant="h4" align="center" sx={{ m: 1 }}>
                 {calendar.currentMonth} {calendar.currentYear}

@@ -45,7 +45,10 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
                         </Box>
                         <Typography
                             variant="body2"
-                            sx={styles.taskTitle}
+                            sx={{
+                                ...styles.taskTitle,
+                                backgroundColor: task.isMatched ? 'yellow' : 'transparent',
+                            }}
                         >
                             {task.title}
                         </Typography>

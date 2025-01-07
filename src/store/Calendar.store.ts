@@ -10,19 +10,37 @@ class CalendarStore {
     selectedCountry = "US";
     weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
     normalizeDate = (date: string | Date) => format(new Date(date), "yyyy-MM-dd");
+    searchText: string = "";
 
     constructor() {
         makeObservable(this, {
             days: observable,
             weekdays: observable,
             selectedCountry: observable,
+            searchText: observable,
 
             fetchData: action,
             addTask: action,
             setDays: action,
+            setSearchText: action,
 
             currentMonth: computed,
             currentYear: computed,
+        });
+    }
+
+    setSearchText(text: string) {
+        this.searchText = text
+        this.updateMatchedTasks()
+    }
+
+    updateMatchedTasks() {
+        const searchTextLower = this.searchText.toLowerCase();
+
+        this.days.forEach((day) => {
+            day.tasks?.forEach((task) => {
+                task.isMatched = this.searchText === "" ? false : task.title.toLowerCase().includes(searchTextLower);
+            });
         });
     }
 
@@ -97,7 +115,7 @@ class CalendarStore {
                 if (!day.tasks) {
                     day.tasks = [];
                 }
-    
+
                 day.tasks.push({
                     id: `${Date.now()}`,
                     title: task.title,
