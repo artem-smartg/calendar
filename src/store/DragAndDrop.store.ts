@@ -4,15 +4,20 @@ import CalendarStore from "./Calendar.store";
 
 
 class DragAndDropStore {
-    currentDay: Day | null = null; 
+    currentDay: Day | null = null;
     currentTask: Task | null = null;
+    targetTaskIndex: number | null = null; // Новый стейт для индекса цели
 
-    constructor(private calendarStore: CalendarStore) {  
+    constructor(private calendarStore: CalendarStore) {
         makeObservable(this, {
             currentDay: observable,
             currentTask: observable,
+            targetTaskIndex: observable,
+
             setCurrentDay: action,
             setCurrentTask: action,
+            setTargetTaskIndex: action,
+
             onDragStart: action,
             onDrop: action,
         });
@@ -20,6 +25,7 @@ class DragAndDropStore {
 
     setCurrentDay(day: Day | null) { this.currentDay = day }
     setCurrentTask(task: Task | null) { this.currentTask = task }
+    setTargetTaskIndex(index: number | null) { this.targetTaskIndex = index; }
 
     onDragStart(e: React.DragEvent, day: Day, task: Task) {
         this.setCurrentDay(day)
@@ -31,32 +37,47 @@ class DragAndDropStore {
         target.style.boxShadow = "none";
         this.setCurrentDay(null);
         this.setCurrentTask(null);
+        this.setTargetTaskIndex(null);
     }
 
     onDrop(e: React.DragEvent, targetDay: Day) {
-        e.preventDefault()
-        if (!this.currentDay || !this.currentTask) return;
+        e.preventDefault();
 
-        // Удалить задачу из исходного дня
-        // const sourceDayIndex = this.calendarStore.days.indexOf(this.currentDay);
-        const taskIndex = this.currentDay.tasks?.findIndex((t) => t.id === this.currentTask!.id);
-        if (taskIndex !== undefined && taskIndex > -1) {
-            this.currentDay.tasks!.splice(taskIndex, 1);
+        if (!this.currentDay || !this.currentTask || this.targetTaskIndex === null) return;
+
+        // Удаляем задачу из текущего дня
+        const currentIndex = this.currentDay.tasks!.findIndex(
+            (task) => task.id === this.currentTask!.id
+        );
+
+        if (currentIndex > -1) {
+            this.currentDay.tasks!.splice(currentIndex, 1);
         }
 
-        // Добавить задачу в целевой день
-        const targetDayIndex = this.calendarStore.days.indexOf(targetDay);
-        if (targetDayIndex > -1) {
+        // Если перетаскивание внутри одного дня
+        if (this.currentDay === targetDay) {
+            // Вставляем задачу на позицию перед задачей, над которой её отпустили
+            const adjustedIndex =
+                this.targetTaskIndex > currentIndex ? this.targetTaskIndex - 1 : this.targetTaskIndex;
+
+            targetDay.tasks!.splice(adjustedIndex, 0, this.currentTask);
+        } else {
+            // Если задача перемещается в другой день
             targetDay.tasks = targetDay.tasks || [];
-            targetDay.tasks.push(this.currentTask);
+            targetDay.tasks.splice(this.targetTaskIndex, 0, this.currentTask);
         }
 
+        // Сброс состояния
         this.setCurrentDay(null);
         this.setCurrentTask(null);
+        this.setTargetTaskIndex(null);
     }
 
-    onDragOver(e: React.DragEvent) {
+    onDragOver(e: React.DragEvent, targetTaskIndex: number | null) {
         e.preventDefault();
+        if (targetTaskIndex !== null) {
+            this.setTargetTaskIndex(targetTaskIndex);
+        }
         const target = e.currentTarget as HTMLElement;
         if (target.className.includes("task")) {
             target.style.boxShadow = "0px 3px 3px grey";

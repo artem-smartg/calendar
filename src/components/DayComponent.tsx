@@ -25,14 +25,14 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
             </Typography>
 
             <Box>
-                {day.tasks?.map((task) => (
+                {day.tasks?.map((task, index) => (
                     <Box
                         key={task.id}
                         sx={styles.taskBox}
                         draggable={true}
                         onDragStart={(e) => dragDrop.onDragStart(e, day, task)}
                         onDragEnd={(e) => dragDrop.onDragEnd(e)}
-                        onDragOver={(e) => dragDrop.onDragOver(e)}
+                        onDragOver={(e) => dragDrop.onDragOver(e, index)}
                         onDragLeave={(e) => dragDrop.onDragLeave(e)}
                     >
                         <Box sx={{ display: "flex", marginBottom: "4px" }}>
@@ -43,7 +43,10 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
                                 ></Box>
                             ))}
                         </Box>
-                        <Typography variant="body2" sx={styles.taskTitle}>
+                        <Typography
+                            variant="body2"
+                            sx={styles.taskTitle}
+                        >
                             {task.title}
                         </Typography>
                     </Box>

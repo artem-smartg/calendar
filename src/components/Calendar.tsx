@@ -13,6 +13,7 @@ const Calendar: React.FC = observer(() => {
         calendar.fetchData(calendar.selectedCountry);
     }, [calendar.selectedCountry])
 
+
     return (
         <Box>
             <Button sx={{ m: 1 }} variant="contained" color="primary" onClick={() => taskModal.toggleModal()}>
@@ -46,7 +47,7 @@ const Calendar: React.FC = observer(() => {
                             item
                             xs={1.7}
                             key={day.date}
-                            onDragOver={(e) => dragDrop.onDragOver(e)}
+                            onDragOver={(e) => dragDrop.onDragOver(e, null)}
                             onDrop={(e) => dragDrop.onDrop(e, day)}
                         >
                             <DayComponent

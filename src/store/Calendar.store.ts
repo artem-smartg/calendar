@@ -16,15 +16,18 @@ class CalendarStore {
             days: observable,
             weekdays: observable,
             selectedCountry: observable,
+
             fetchData: action,
             addTask: action,
             setDays: action,
+
             currentMonth: computed,
             currentYear: computed,
         });
     }
 
     setDays(days: Day[]) { this.days = days }
+
 
     get currentMonth() {
         if (this.days.length > 0) {
@@ -54,7 +57,7 @@ class CalendarStore {
 
             const longWeekends = response.data;
 
-            const calendarDays = this.generateDaysInMonth(0, 2024).map((date) => {
+            const calendarDays = this.generateDaysInMonth(0, 2025).map((date) => {
                 const longWeekend = longWeekends.find(
                     (lw: any) =>
                         this.normalizeDate(lw.startDate) <= date &&
