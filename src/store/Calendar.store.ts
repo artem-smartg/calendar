@@ -1,6 +1,6 @@
 
 import { observable, action, makeObservable, runInAction, computed } from "mobx";
-import { Day } from "../type/calendar.type";
+import { Day, Task } from "../type/calendar.type";
 import { format } from "date-fns";
 import calendarService from "../services/Calendar.services";
 
@@ -20,7 +20,7 @@ class CalendarStore {
             searchText: observable,
 
             fetchData: action,
-            addTask: action,
+            createTask: action,
             setDays: action,
             setSearchText: action,
 
@@ -39,7 +39,10 @@ class CalendarStore {
 
         this.days.forEach((day) => {
             day.tasks?.forEach((task) => {
-                task.isMatched = this.searchText === "" ? false : task.title.toLowerCase().includes(searchTextLower);
+                task.isMatched = this.searchText === "" ?
+                    false
+                    :
+                    task.title.toLowerCase().includes(searchTextLower);
             });
         });
     }
@@ -106,7 +109,7 @@ class CalendarStore {
         );
     }
 
-    addTask(task: { date: string; title: string; labels: string[] }) {
+    createTask(task: { date: string; title: string; labels: string[] }) {
         const normalizedDate = this.normalizeDate(task.date);
         const day = this.days.find((d) => d.date === normalizedDate);
 
@@ -127,6 +130,37 @@ class CalendarStore {
         }
     }
 
+    updateTask(taskId: string, updatedTask: Partial<Task>, newDate: string) {
+        const currentDay = this.days.find((day) =>
+          day.tasks?.some((task) => task.id === taskId)
+        );
+    
+        if (!currentDay || !currentDay.tasks) return;
+    
+        const taskIndex = currentDay.tasks.findIndex((task) => task.id === taskId);
+        if (taskIndex === -1) return;
+    
+        if (newDate !== currentDay.date) {
+          const [taskToMove] = currentDay.tasks.splice(taskIndex, 1);
+    
+          const targetDay = this.days.find((day) => day.date === newDate);
+          if (targetDay) {
+            targetDay.tasks = [...(targetDay.tasks || []), { ...taskToMove, ...updatedTask }];
+          } else {
+            this.days.push({
+              date: newDate,
+              isHoliday: false,
+              isLongWeekend: false,
+              tasks: [{ ...taskToMove, ...updatedTask }],
+            });
+          }
+        } else {
+          currentDay.tasks[taskIndex] = {
+            ...currentDay.tasks[taskIndex],
+            ...updatedTask,
+          };
+        }
+    }
 
 }
 

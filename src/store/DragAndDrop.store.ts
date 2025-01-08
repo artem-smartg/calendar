@@ -42,19 +42,15 @@ class DragAndDropStore {
 
     onDrop(e: React.DragEvent, targetDay: Day) {
         e.preventDefault();
-
         if (!this.currentDay || !this.currentTask || this.targetTaskIndex === null) return;
 
-        // Удаляем задачу из текущего дня
         const currentIndex = this.currentDay.tasks!.findIndex(
             (task) => task.id === this.currentTask!.id
         );
 
         if (currentIndex > -1) this.currentDay.tasks!.splice(currentIndex, 1);
 
-        // Если перетаскивание внутри одного дня
         if (this.currentDay === targetDay) {
-            // Вставляем задачу на позицию перед задачей, над которой её отпустили
             const adjustedIndex = this.targetTaskIndex > currentIndex
                 ?
                 this.targetTaskIndex - 1
@@ -63,7 +59,6 @@ class DragAndDropStore {
 
             targetDay.tasks!.splice(adjustedIndex, 0, this.currentTask);
         } else {
-            // Если задача перемещается в другой день
             targetDay.tasks = targetDay.tasks || [];
             targetDay.tasks.splice(this.targetTaskIndex, 0, this.currentTask);
         }

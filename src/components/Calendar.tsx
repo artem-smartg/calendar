@@ -13,10 +13,12 @@ const Calendar: React.FC = observer(() => {
         calendar.fetchData(calendar.selectedCountry);
     }, [calendar.selectedCountry])
 
-
     return (
         <Box>
-            <Button sx={{ m: 1 }} variant="contained" color="primary" onClick={() => taskModal.toggleModal()}>
+            <Button
+                sx={{ m: 1 }} variant="contained" color="primary"
+                onClick={() => taskModal.toggleModal()}
+            >
                 Добавить задачу
             </Button>
 
@@ -24,16 +26,16 @@ const Calendar: React.FC = observer(() => {
                 sx={{ m: 1 }}
                 variant="outlined"
                 placeholder="Поиск задач"
-                value={calendar.searchText} 
-                onChange={(e)=> calendar.setSearchText(e.target.value)}
+                value={calendar.searchText}
+                onChange={(e) => calendar.setSearchText(e.target.value)}
             />
 
             <Typography variant="h4" align="center" sx={{ m: 1 }}>
                 {calendar.currentMonth} {calendar.currentYear}
             </Typography>
 
-            <Grid container spacing={1} sx={{paddingX: 2}}>
-                
+            <Grid container spacing={1} sx={{ paddingX: 2 }}>
+
                 {calendar.weekdays.map((day) => (
                     <Grid item xs={1.7} key={day}>
                         <Typography variant="h6" align="center">
@@ -70,7 +72,7 @@ const Calendar: React.FC = observer(() => {
             </Grid>
 
             <TaskModal />
-        </Box>
+        </Box >
     );
 });
 

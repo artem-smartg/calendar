@@ -9,10 +9,15 @@ const TaskModal: React.FC = observer(() => {
   const { calendar, taskModal } = useContext(Context) as ContextType
 
   const handleSave = () => {
-    const { title, date, selectedLabels } = taskModal;
+    const { title, date, selectedLabels, taskToEdit } = taskModal;
 
     if (title && date) {
-      calendar.addTask({ title, date, labels: selectedLabels });
+      if (taskToEdit) {
+        calendar.updateTask(taskToEdit.id, { title, labels: selectedLabels }, date);
+      }
+      else {
+        calendar.createTask({ title, date, labels: selectedLabels });
+      }
       taskModal.reset()
       taskModal.toggleModal()
     }
@@ -21,7 +26,10 @@ const TaskModal: React.FC = observer(() => {
   return (
     <Modal open={taskModal.open} onClose={() => taskModal.toggleModal()}>
       <Box sx={styles.modalBox}>
-        <Typography align="center" variant="h6" gutterBottom>Добавить задачу</Typography>
+
+        <Typography align="center" variant="h6" gutterBottom>
+          {taskModal.taskToEdit ? 'Редатировать задачу' : 'Добавить задачу' }
+        </Typography>
 
         <TextField
           fullWidth
@@ -62,7 +70,7 @@ const TaskModal: React.FC = observer(() => {
           disabled={!taskModal.title || !taskModal.date}
           fullWidth
         >
-          Сохранить
+          {taskModal.taskToEdit ? "Сохранить изменения" : "Создать"}
         </Button>
       </Box>
     </Modal>

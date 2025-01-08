@@ -6,11 +6,10 @@ export interface Day {
     tasks?: Task[];
 }
 
-
 export interface DayProps {
-    day: Day
+    day: Day,
+    onClick?: () => void;
 }
-
 
 export interface Task {
     id: string;

@@ -1,18 +1,22 @@
 import React, { useContext } from "react";
 import { Box, Typography } from "@mui/material";
 import { observer } from 'mobx-react-lite';
-import { DayProps } from "../type/calendar.type";
+import { DayProps, Task } from "../type/calendar.type";
 import { Context } from "../context/ContextProvider";
 import { ContextType } from "../type/context.type";
 import { styles } from "../view/dayComponent.style"
 
 
 const DayComponent: React.FC<DayProps> = observer(({ day }) => {
-
-    const { dragDrop } = useContext(Context) as ContextType
+    const { dragDrop, taskModal } = useContext(Context) as ContextType
 
     const dayNumber = new Date(day.date).getDate();
     const monthName = new Date(day.date).toLocaleString("en-US", { month: "short" });
+
+    const handleTaskClick = (task: Task) => {
+        taskModal.setTaskToEdit(task, day.date); 
+        taskModal.toggleModal();
+      };
 
     return (
         <Box sx={styles.boxContainer}>
@@ -34,8 +38,9 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
                         onDragEnd={(e) => dragDrop.onDragEnd(e)}
                         onDragOver={(e) => dragDrop.onDragOver(e, index)}
                         onDragLeave={(e) => dragDrop.onDragLeave(e)}
+                        onClick={() => handleTaskClick(task)}
                     >
-                        <Box sx={{ display: "flex", marginBottom: "4px" }}>
+                        <Box sx={{ display: "flex", flexWrap:"wrap", marginBottom: "4px" }}>
                             {task.labels.map((label, index) => (
                                 <Box
                                     key={index}

@@ -31,7 +31,7 @@ export const styles = {
     labelBox: {
         width: "40px",
         height: "5px",
-        marginRight: "4px",
+        margin: "0 4px 3px 0",
         borderRadius: "2px",
     } as SxProps<Theme>,
     taskTitle: {
