@@ -49,6 +49,9 @@ class CalendarStore {
 
     setDays(days: Day[]) { this.days = days }
 
+    getAmountTasks(day: Day): number {
+        return day.tasks ? day.tasks.length : 0;
+    }
 
     get currentMonth() {
         if (this.days.length > 0) {
@@ -132,33 +135,33 @@ class CalendarStore {
 
     updateTask(taskId: string, updatedTask: Partial<Task>, newDate: string) {
         const currentDay = this.days.find((day) =>
-          day.tasks?.some((task) => task.id === taskId)
+            day.tasks?.some((task) => task.id === taskId)
         );
-    
+
         if (!currentDay || !currentDay.tasks) return;
-    
+
         const taskIndex = currentDay.tasks.findIndex((task) => task.id === taskId);
         if (taskIndex === -1) return;
-    
+
         if (newDate !== currentDay.date) {
-          const [taskToMove] = currentDay.tasks.splice(taskIndex, 1);
-    
-          const targetDay = this.days.find((day) => day.date === newDate);
-          if (targetDay) {
-            targetDay.tasks = [...(targetDay.tasks || []), { ...taskToMove, ...updatedTask }];
-          } else {
-            this.days.push({
-              date: newDate,
-              isHoliday: false,
-              isLongWeekend: false,
-              tasks: [{ ...taskToMove, ...updatedTask }],
-            });
-          }
+            const [taskToMove] = currentDay.tasks.splice(taskIndex, 1);
+
+            const targetDay = this.days.find((day) => day.date === newDate);
+            if (targetDay) {
+                targetDay.tasks = [...(targetDay.tasks || []), { ...taskToMove, ...updatedTask }];
+            } else {
+                this.days.push({
+                    date: newDate,
+                    isHoliday: false,
+                    isLongWeekend: false,
+                    tasks: [{ ...taskToMove, ...updatedTask }],
+                });
+            }
         } else {
-          currentDay.tasks[taskIndex] = {
-            ...currentDay.tasks[taskIndex],
-            ...updatedTask,
-          };
+            currentDay.tasks[taskIndex] = {
+                ...currentDay.tasks[taskIndex],
+                ...updatedTask,
+            };
         }
     }
 

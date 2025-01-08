@@ -17,6 +17,17 @@ export const styles = {
         color: "#333",
         textAlign: "left",
     } as SxProps<Theme>,
+    dayNumberText: {
+        color: '#000',
+        fontWeight: 500,
+        fontStyle: 'normal',
+    } as SxProps<Theme>,
+    taskCountText: {
+        color: 'gray',
+        fontWeight: 400,
+        fontSize: '15px',
+        marginLeft: '8px',
+    } as SxProps<Theme>,
     taskBox: {
         display: "flex",
         flexDirection: "column",
@@ -26,7 +37,7 @@ export const styles = {
         padding: "4px",
         borderRadius: "3px",
         boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.1)",
-        cursor:'pointer',
+        cursor: 'pointer',
     } as SxProps<Theme>,
     labelBox: {
         width: "40px",

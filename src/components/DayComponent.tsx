@@ -8,24 +8,32 @@ import { styles } from "../view/dayComponent.style"
 
 
 const DayComponent: React.FC<DayProps> = observer(({ day }) => {
-    const { dragDrop, taskModal } = useContext(Context) as ContextType
+    const { dragDrop, taskModal, calendar } = useContext(Context) as ContextType
 
     const dayNumber = new Date(day.date).getDate();
     const monthName = new Date(day.date).toLocaleString("en-US", { month: "short" });
 
     const handleTaskClick = (task: Task) => {
-        taskModal.setTaskToEdit(task, day.date); 
+        taskModal.setTaskToEdit(task, day.date);
         taskModal.toggleModal();
-      };
+    };
+
+    const taskCount = calendar.getAmountTasks(day)
 
     return (
         <Box sx={styles.boxContainer}>
 
             <Typography variant="subtitle2" sx={styles.typographySubtitle}>
                 {day.showMonth && (
-                    <Typography >{`${monthName} ${dayNumber}`}</Typography>
+                    <Typography>{`${monthName} ${dayNumber}`}</Typography>
                 )}
-                {!day.showMonth && <Typography>{dayNumber}</Typography>}
+                {!day.showMonth &&
+                    <Typography sx={styles.dayNumberText}>
+                        {dayNumber}
+                        <Box component="span" sx={styles.taskCountText}>
+                            {taskCount > 0 ? `${taskCount} card` : ''}
+                        </Box>
+                    </Typography>}
             </Typography>
 
             <Box>
@@ -40,7 +48,7 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
                         onDragLeave={(e) => dragDrop.onDragLeave(e)}
                         onClick={() => handleTaskClick(task)}
                     >
-                        <Box sx={{ display: "flex", flexWrap:"wrap", marginBottom: "4px" }}>
+                        <Box sx={{ display: "flex", flexWrap: "wrap", marginBottom: "4px" }}>
                             {task.labels.map((label, index) => (
                                 <Box
                                     key={index}
