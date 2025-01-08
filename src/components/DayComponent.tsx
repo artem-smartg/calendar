@@ -12,32 +12,23 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
 
     const dayNumber = new Date(day.date).getDate();
     const monthName = new Date(day.date).toLocaleString("en-US", { month: "short" });
+    const taskCount = calendar.getAmountTasks(day)
 
     const handleTaskClick = (task: Task) => {
         taskModal.setTaskToEdit(task, day.date);
         taskModal.toggleModal();
     };
 
-    const taskCount = calendar.getAmountTasks(day)
-
     return (
         <Box sx={styles.boxContainer}>
 
             <Typography variant="subtitle2" sx={styles.typographySubtitle}>
-                {day.showMonth && (
-                    <Typography>{`${monthName} ${dayNumber}`}
-                        <Box component="span" sx={styles.taskCountText}>
-                            {taskCount > 0 ? `${taskCount} card` : ''}
-                        </Box>
-                    </Typography>
-                )}
-                {!day.showMonth &&
-                    <Typography sx={styles.dayNumberText}>
-                        {dayNumber}
-                        <Box component="span" sx={styles.taskCountText}>
-                            {taskCount > 0 ? `${taskCount} card` : ''}
-                        </Box>
-                    </Typography>}
+                <Typography sx={styles.dayNumberText}>
+                    {day.showMonth ? `${monthName} ${dayNumber}` : dayNumber}
+                    <Box component="span" sx={styles.taskCountText}>
+                        {taskCount > 0 ? `${taskCount} card` : ''}
+                    </Box>
+                </Typography>
             </Typography>
 
             <Box>
