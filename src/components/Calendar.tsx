@@ -23,7 +23,7 @@ const Calendar: React.FC = observer(() => {
             </Button>
 
             <TextField
-                sx={{ m: 1 }}
+                sx={{m: 1,'& .MuiInputBase-root': {height: '38px'}}}
                 variant="outlined"
                 placeholder="Поиск задач"
                 value={calendar.searchText}
@@ -34,7 +34,7 @@ const Calendar: React.FC = observer(() => {
                 {calendar.currentMonth} {calendar.currentYear}
             </Typography>
 
-            <Grid container spacing={1} sx={{ paddingX: 2 }}>
+            <Grid container spacing={1} sx={{ paddingX: 2, mb:2 }}>
 
                 {calendar.weekdays.map((day) => (
                     <Grid item xs={1.7} key={day}>

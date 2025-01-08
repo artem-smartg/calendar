@@ -25,7 +25,11 @@ const DayComponent: React.FC<DayProps> = observer(({ day }) => {
 
             <Typography variant="subtitle2" sx={styles.typographySubtitle}>
                 {day.showMonth && (
-                    <Typography>{`${monthName} ${dayNumber}`}</Typography>
+                    <Typography>{`${monthName} ${dayNumber}`}
+                        <Box component="span" sx={styles.taskCountText}>
+                            {taskCount > 0 ? `${taskCount} card` : ''}
+                        </Box>
+                    </Typography>
                 )}
                 {!day.showMonth &&
                     <Typography sx={styles.dayNumberText}>
